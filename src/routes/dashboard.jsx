@@ -18,7 +18,7 @@ import {
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
+    path: "/Dashboard",
     sidebarName: "Dashboard",
     navbarName: "FastWithMe Challenge Dashboard",
     icon: Dashboard,
@@ -31,7 +31,7 @@ const dashboardRoutes = [
     icon: ContentPaste,
     component: TableList
   },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/Dashboard", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;
