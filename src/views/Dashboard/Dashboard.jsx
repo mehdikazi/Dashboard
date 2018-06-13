@@ -191,12 +191,46 @@ class Dashboard extends React.Component {
     return challenge_period_data;
   }
 
+  calculateWeightLossTable = () => {
+    const df = window.day_number_for_checkins
+    const removeNoneEntries = df
+      .where(row => row.weight_on_day > 0);
+    const lowestWeight = removeNoneEntries
+      .groupBy(row => row.email)
+      .select(group => ({
+        email: group.first().email,
+        start_weight: group.first().start_weight,
+        lowestWeight: group.deflate(row => row.weight_on_day).min()
+      }))
+      .inflate();
+
+    const weightLossByEachTable = lowestWeight
+      .select(row => ({
+        email: row.email,
+        weight_lost: row.start_weight - row.lowestWeight
+      }));
+
+    const totalWeightLost = weightLossByEachTable.getSeries("weight_lost").sum();
+    return totalWeightLost;
+  }
+
   render() {
     const challenge_period_data = this.calculateChallengePeriodData();
     const schedule_data = this.calculateScheduleData();
     return (
       <div>
         <Grid container>
+          <ItemGrid xs={12} sm={6} md={3}>
+            <StatsCard
+              icon={Accessibility}
+              iconColor="purple"
+              title="Total Weight Lost by Active Users"
+              description={Math.round(this.calculateWeightLossTable() * 10) / 10}
+              small="pounds"
+              statIcon={DateRange}
+              statText="Last 24 Hours"
+            />
+          </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
               icon={Accessibility}

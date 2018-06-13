@@ -252,6 +252,7 @@ function calculateActiveUsers() {
       day_number: moment().diff(row.start_date, 'days') + 1,
       challenge_period: row.challenge_period,
       start_date: row.start_date,
+      start_weight: row.start_weight,
     }))
 
   return acitive_user_table;
@@ -276,6 +277,7 @@ function joinActiveUserAndCheckin(activeUserDf) {
         calories_eaten: right.calories_eaten,
         day_of_challenge: left.day_number,
         start_date: left.start_date,
+        start_weight: left.start_weight,
       }
     }
   );
