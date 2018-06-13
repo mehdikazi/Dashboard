@@ -108,6 +108,9 @@ function getDemographics() {
     .withSeries('labels', schedule_table.getSeries("schedule").select(value => transform_schedule(value)))
     .orderBy(column => column.series);
 
+  const joined_qid_cid = joinQDAndCID();
+  const clean_joined_qid_cide = cleanDf(joined_qid_cid);
+
   const activeUserDf = calculateActiveUsers();
   const joinedDf = joinActiveUserAndCheckin(activeUserDf);
   const cleanedDf = cleanDf(joinedDf);
@@ -129,6 +132,7 @@ function getDemographics() {
       start_date: row.start_date.format("dddd, MMMM Do YYYY"),
     }));
 
+  window.joined_qid_cid = clean_joined_qid_cide;
   window.demographics_table = demographics_table;
   window.acitive_user_table = acitive_user_table;
   window.challenge_period_table = challenge_period_table_updated;
@@ -256,6 +260,32 @@ function calculateActiveUsers() {
     }))
 
   return acitive_user_table;
+}
+
+function joinQDAndCID() {
+  const joinedDf = window.qd.join(
+    window.cid,
+    left => left.email,
+    right => right.email,
+    (left, right) => {
+      return {
+        email: left.email,
+        first_name: left.first_name,
+        last_name: left.last_name,
+        check_in_date: right.date,
+        weight_on_day: right.weight,
+        goal_weight: right.goal,
+        rating: right.rating,
+        schedule: left.schedule,
+        challenge_period: left.challenge_period,
+        calories_eaten: right.calories_eaten,
+        day_of_challenge: left.day_number,
+        start_date: left.start_date,
+        start_weight: left.start_weight,
+      }
+    }
+  );
+  return joinedDf;
 }
 
 function joinActiveUserAndCheckin(activeUserDf) {

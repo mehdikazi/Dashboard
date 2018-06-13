@@ -14,6 +14,9 @@ import {
   ArrowUpward,
   AccessTime,
   Accessibility,
+  TrendingDown,
+  GroupAdd,
+  Group,
 } from "@material-ui/icons";
 import { withStyles, Grid } from "material-ui";
 
@@ -192,7 +195,7 @@ class Dashboard extends React.Component {
   }
 
   calculateWeightLossTable = () => {
-    const df = window.day_number_for_checkins
+    const df = window.joined_qid_cid
     const removeNoneEntries = df
       .where(row => row.weight_on_day > 0);
     const lowestWeight = removeNoneEntries
@@ -222,9 +225,9 @@ class Dashboard extends React.Component {
         <Grid container>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
+              icon={TrendingDown}
               iconColor="purple"
-              title="Total Weight Lost by Active Users"
+              title="Total Weight Lost"
               description={Math.round(this.calculateWeightLossTable() * 10) / 10}
               small="pounds"
               statIcon={DateRange}
@@ -233,7 +236,7 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
+              icon={Group}
               iconColor="orange"
               title="Total Users"
               description={window.qd.count()}
@@ -255,7 +258,7 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
+              icon={GroupAdd}
               iconColor="red"
               title="New to IF"
               description={window.demographics_table.getSeries("Percent_New_To_IF").toArray()[0]}
@@ -266,7 +269,7 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
+              icon={TrendingDown}
               iconColor="blue"
               title="Average Expected Loss"
               description={window.demographics_table.getSeries("Average_Expected_Loss").toArray()[0]}
@@ -278,7 +281,7 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
+              icon={TrendingDown}
               iconColor="purple"
               title="Median Expected Loss"
               description={window.demographics_table.getSeries("Median_Expected_Loss").toArray()[0]}
