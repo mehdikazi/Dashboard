@@ -46,9 +46,9 @@ function getDemographics() {
   const demographics_table = new DataFrame([
     {
       Average_Age: Math.round(average_age),
-      Percent_New_To_IF: Math.round(percent_new_if*100) / 100,
-      Average_Expected_Loss: Math.round(average_expected_loss*100) / 100,
-      Median_Expected_Loss: median_expected_loss,
+      Percent_New_To_IF: (Math.round(percent_new_if*100) / 100) * 100,
+      Average_Expected_Loss: Math.round(average_expected_loss),
+      Median_Expected_Loss: Math.round(median_expected_loss),
       number_active_users: number_active_users,
     }
   ])
@@ -79,7 +79,7 @@ function getDemographics() {
       series: row.count,
     }))
     .withSeries('labels', challenge_period_table.getSeries("challenge_period").select(value => transform_challenge_period_to_text(value)))
-    .orderBy(column => column.labels);
+    .orderByDescending(column => column.series);
 
   const gender_table = window.qd
     .groupBy(row => row.gender)
@@ -105,7 +105,8 @@ function getDemographics() {
       labels: String(row.count),
       series: row.count
     }))
-    .withSeries('labels', schedule_table.getSeries("schedule").select(value => transform_schedule(value)));
+    .withSeries('labels', schedule_table.getSeries("schedule").select(value => transform_schedule(value)))
+    .orderBy(column => column.series);
 
   const activeUserDf = calculateActiveUsers();
   const joinedDf = joinActiveUserAndCheckin(activeUserDf);
@@ -219,7 +220,7 @@ function transform_schedule(value) {
   } else if (value == "6:1 & 16/8 ") {
     return "6:1";
   } else {
-    return "Unsure";
+    return "Na";
   }
 }
 

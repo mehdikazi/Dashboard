@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 // react plugin for creating charts
+import Chartist from 'chartist';
 import ChartistGraph from "react-chartist";
 import {
   ContentCopy,
@@ -32,7 +33,9 @@ import {
 } from "../../variables/charts";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/dashboardStyle";
-var Chartist = require("chartist");
+
+// var Chartist = require("chartist");
+var tooltip = require("chartist-plugin-tooltip-infl");
 
 class Dashboard extends React.Component {
   state = {
@@ -67,8 +70,18 @@ class Dashboard extends React.Component {
       },
       options: {
         axisX: {
-          showGrid: false
+          showGrid: true,
+          onlyInteger: true,
         },
+        plugins: [
+          Chartist.plugins.tooltip({
+            className : 'ct-tooltipa'
+          })
+        ],
+        axisY: {
+          showGrid: false,
+        },
+        horizontalBars: true,
         low: 0,
         high: Math.max.apply(Math, series),
         chartPadding: {
@@ -130,8 +143,13 @@ class Dashboard extends React.Component {
       },
       options: {
         axisX: {
-          showGrid: false
+          showGrid: false,
         },
+        plugins: [
+          Chartist.plugins.tooltip({
+            className : 'ct-tooltip'
+          })
+        ],
         low: 0,
         high: Math.max.apply(Math, series),
         chartPadding: {
