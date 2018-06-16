@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 import CsvParse from '@vtex/react-csv-parse';
 import { readFile, Series, DataFrame } from 'data-forge';
-import getDemographics from '../../DFFunctions/getDemographics.js';
+import createAndStoreImportantDfs from '../../DFFunctions/createAndStoreImportantDfs.js';
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -46,9 +46,7 @@ class App extends React.Component {
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
   }
-  // componentDidUpdate() {
-  //   this.refs.mainPanel.scrollTop = 0;
-  // }
+
   handleQuestionaireData = questionaireData => {
     const questionaireDf = new DataFrame(questionaireData);
     window.qd = questionaireDf;
@@ -67,7 +65,7 @@ class App extends React.Component {
   render() {
     if (this.state.questionaireData && this.state.checkInData) {
       const { classes, ...rest } = this.props;
-      getDemographics();
+      createAndStoreImportantDfs();
       return (
         <div className={classes.wrapper}>
           <Sidebar

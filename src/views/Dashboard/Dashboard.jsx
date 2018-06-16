@@ -29,197 +29,15 @@ import {
   ItemGrid
 } from "../../components";
 
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "../../variables/charts";
-
 import dashboardStyle from "../../assets/jss/material-dashboard-react/dashboardStyle";
 
-// var Chartist = require("chartist");
 var tooltip = require("chartist-plugin-tooltip-infl");
 
 class Dashboard extends React.Component {
-  state = {
-    value: 0
-  };
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
-
-  calculateScheduleData = () => {
-    var delays = 80,
-      durations = 500;
-    var delays2 = 80,
-      durations2 = 500;
-
-    const schedule_data_array = window.schedule_table.toRows();
-    const labels = []
-    const series = []
-    for (var i=0; i < schedule_data_array.length; i++) {
-      labels.push(schedule_data_array[i][0]);
-      series.push(schedule_data_array[i][1]);
-    };
-
-    const schedule_data = {
-      data: {
-        labels: labels,
-        series: [series]
-      },
-      options: {
-        axisX: {
-          showGrid: true,
-          onlyInteger: true,
-        },
-        plugins: [
-          Chartist.plugins.tooltip({
-            className : 'ct-tooltipa'
-          })
-        ],
-        axisY: {
-          showGrid: false,
-        },
-        horizontalBars: true,
-        low: 0,
-        high: Math.max.apply(Math, series),
-        chartPadding: {
-          top: 0,
-          right: 5,
-          bottom: 0,
-          left: 0
-        },
-      },
-      responsiveOptions: [
-        [
-          "screen and (max-width: 640px)",
-          {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc: function(value) {
-                return value[0];
-              }
-            }
-          }
-        ]
-      ],
-      animation: {
-        draw: function(data) {
-          if (data.type === "bar") {
-            data.element.animate({
-              opacity: {
-                begin: (data.index + 1) * delays2,
-                dur: durations2,
-                from: 0,
-                to: 1,
-                easing: "ease"
-              }
-            });
-          }
-        }
-      }
-    };
-    return schedule_data;
-  }
-
-  calculateChallengePeriodData = () => {
-    var delays = 80,
-      durations = 500;
-    var delays2 = 80,
-      durations2 = 500;
-    const challenge_period_array = window.challenge_period_table.toRows();
-    const labels = [];
-    const series = [];
-    for (var i=0; i < challenge_period_array.length; i++) {
-      labels.push(challenge_period_array[i][0]);
-      series.push(challenge_period_array[i][1]);
-    };
-
-    const challenge_period_data = {
-      data: {
-        labels: labels,
-        series: [series]
-      },
-      options: {
-        axisX: {
-          showGrid: false,
-        },
-        plugins: [
-          Chartist.plugins.tooltip({
-            className : 'ct-tooltip'
-          })
-        ],
-        low: 0,
-        high: Math.max.apply(Math, series),
-        chartPadding: {
-          top: 0,
-          right: 5,
-          bottom: 0,
-          left: 0
-        },
-      },
-      responsiveOptions: [
-        [
-          "screen and (max-width: 640px)",
-          {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc: function(value) {
-                return value[0];
-              }
-            }
-          }
-        ]
-      ],
-      animation: {
-        draw: function(data) {
-          if (data.type === "bar") {
-            data.element.animate({
-              opacity: {
-                begin: (data.index + 1) * delays2,
-                dur: durations2,
-                from: 0,
-                to: 1,
-                easing: "ease"
-              }
-            });
-          }
-        }
-      }
-    };
-    return challenge_period_data;
-  }
-
-  calculateWeightLossTable = () => {
-    const df = window.joined_qid_cid
-    const removeNoneEntries = df
-      .where(row => row.weight_on_day > 0);
-    const lowestWeight = removeNoneEntries
-      .groupBy(row => row.email)
-      .select(group => ({
-        email: group.first().email,
-        start_weight: group.first().start_weight,
-        lowestWeight: group.deflate(row => row.weight_on_day).min()
-      }))
-      .inflate();
-
-    const weightLossByEachTable = lowestWeight
-      .select(row => ({
-        email: row.email,
-        weight_lost: row.start_weight - row.lowestWeight
-      }));
-
-    const totalWeightLost = weightLossByEachTable.getSeries("weight_lost").sum();
-    return totalWeightLost;
-  }
 
   render() {
-    const challenge_period_data = this.calculateChallengePeriodData();
     const schedule_data = this.calculateScheduleData();
+    const challenge_period_data = this.calculateChallengePeriodData();
     return (
       <div>
         <Grid container>
@@ -228,7 +46,7 @@ class Dashboard extends React.Component {
               icon={TrendingDown}
               iconColor="purple"
               title="Total Weight Lost"
-              description={Math.round(this.calculateWeightLossTable() * 10) / 10}
+              description={Math.round(this.calculateTotalWeightLoss() * 10) / 10}
               small="pounds"
               statIcon={DateRange}
               statText="Last 24 Hours"
@@ -365,6 +183,172 @@ class Dashboard extends React.Component {
         </Grid>
       </div>
     );
+  }
+
+  calculateScheduleData = () => {
+    var delays = 80,
+      durations = 500;
+    var delays2 = 80,
+      durations2 = 500;
+
+    const schedule_data_array = window.schedule_table.toRows();
+    // console.log(schedule_data_array);
+    const labels = []
+    const series = []
+    for (var i=0; i < schedule_data_array.length; i++) {
+      labels.push(schedule_data_array[i][0]);
+      series.push(schedule_data_array[i][1]);
+    };
+
+    const schedule_data = {
+      data: {
+        labels: labels,
+        series: [series]
+      },
+      options: {
+        axisX: {
+          showGrid: true,
+          onlyInteger: true,
+        },
+        plugins: [
+          Chartist.plugins.tooltip({
+            className : 'ct-tooltipa'
+          })
+        ],
+        axisY: {
+          showGrid: false,
+        },
+        horizontalBars: true,
+        low: 0,
+        high: Math.max.apply(Math, series),
+        chartPadding: {
+          top: 0,
+          right: 5,
+          bottom: 0,
+          left: 0
+        },
+      },
+      responsiveOptions: [
+        [
+          "screen and (max-width: 640px)",
+          {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return value[0];
+              }
+            }
+          }
+        ]
+      ],
+      animation: {
+        draw: function(data) {
+          if (data.type === "bar") {
+            data.element.animate({
+              opacity: {
+                begin: (data.index + 1) * delays2,
+                dur: durations2,
+                from: 0,
+                to: 1,
+                easing: "ease"
+              }
+            });
+          }
+        }
+      }
+    };
+    return schedule_data;
+  }
+
+  calculateChallengePeriodData = () => {
+    var delays = 80,
+      durations = 500;
+    var delays2 = 80,
+      durations2 = 500;
+    const challenge_period_array = window.challenge_period_table.toRows();
+    const labels = [];
+    const series = [];
+    for (var i=0; i < challenge_period_array.length; i++) {
+      labels.push(challenge_period_array[i][0]);
+      series.push(challenge_period_array[i][1]);
+    };
+
+    const challenge_period_data = {
+      data: {
+        labels: labels,
+        series: [series]
+      },
+      options: {
+        axisX: {
+          showGrid: false,
+        },
+        plugins: [
+          Chartist.plugins.tooltip({
+            className : 'ct-tooltip'
+          })
+        ],
+        low: 0,
+        high: Math.max.apply(Math, series),
+        chartPadding: {
+          top: 0,
+          right: 5,
+          bottom: 0,
+          left: 0
+        },
+      },
+      responsiveOptions: [
+        [
+          "screen and (max-width: 640px)",
+          {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return value[0];
+              }
+            }
+          }
+        ]
+      ],
+      animation: {
+        draw: function(data) {
+          if (data.type === "bar") {
+            data.element.animate({
+              opacity: {
+                begin: (data.index + 1) * delays2,
+                dur: durations2,
+                from: 0,
+                to: 1,
+                easing: "ease"
+              }
+            });
+          }
+        }
+      }
+    };
+    return challenge_period_data;
+  }
+
+  calculateTotalWeightLoss = () => {
+    const df = window.joined_qd_cid
+    const removeNoneEntries = df
+      .where(row => row.checkin_weight > 0);
+    const lowestWeight = removeNoneEntries
+      .groupBy(row => row.email)
+      .select(group => ({
+        email: group.first().email,
+        start_weight: group.first().start_weight,
+        lowest_weight: group.deflate(row => row.checkin_weight).min()
+      }))
+      .inflate();
+
+    const weightLossByEachTable = lowestWeight
+      .select(row => ({
+        email: row.email,
+        weight_lost: row.start_weight - row.lowest_weight
+      }));
+
+    const totalWeightLost = weightLossByEachTable.getSeries("weight_lost").sum();
+    return totalWeightLost;
   }
 }
 
