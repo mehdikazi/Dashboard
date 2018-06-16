@@ -37,6 +37,8 @@ function createAndStoreImportantDfs() {
     .orderBy(column => column.count);
   const joinedQdCid = joinQDAndCID(cleanedQd, cleanedCid);
 
+  window.cleaned_qd = cleanedQd;
+  window.cleaned_cid = cleanedCid;
   window.demographics_table = demographicsTable;
   window.gender_table = genderTable;
   window.challenge_period_table = challengePeriodTable;

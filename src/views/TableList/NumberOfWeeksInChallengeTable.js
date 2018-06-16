@@ -11,8 +11,29 @@ class NumberOfWeeksInChallengeTable extends React.Component {
     super(props);
   }
 
+  calculateIsActive = (startDate, challengePeriod) => {
+    if (moment().diff(startDate, 'days') + 1 <= challengePeriod && moment().diff(startDate, 'days') + 1 > 0) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   render() {
-    const numberOfWeeks = window.joined_active_users_with_checkin_table
+    const acitive_user_table = window.cleaned_qd
+      .where(row => this.calculateIsActive(row.start_date, row.challenge_period) == 1)
+      .select(row => ({
+        email: row.email,
+        first_name: row.first_name,
+        last_name: row.last_name,
+        schedule: row.schedule,
+        day_number: moment().diff(row.start_date, 'days') + 1,
+        challenge_period: row.challenge_period,
+        start_date: row.start_date,
+        start_weight: row.start_weight,
+      }))
+
+    const numberOfWeeks = acitive_user_table
       .groupBy(row => row.email)
       .select(group => ({
         email: group.first().email,
@@ -21,7 +42,7 @@ class NumberOfWeeksInChallengeTable extends React.Component {
       }))
       .inflate()
       .orderBy(column => column.number_of_weeks_in_challenge);
-      
+
     return (
       <ItemGrid xs={12} sm={12} md={12}>
         <RegularCard
