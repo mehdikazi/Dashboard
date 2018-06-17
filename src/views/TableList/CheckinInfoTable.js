@@ -57,6 +57,7 @@ class CheckinInfoTable extends React.Component {
         schedule: row.schedule,
         fast_or_eat: row.fast_or_eat_day,
         calories_eaten: row.calories_eaten,
+        calorie_goal: row.tdee,
         calories_burned: row.calories_burned,
         start_date: row.start_date,
         email: row.email,

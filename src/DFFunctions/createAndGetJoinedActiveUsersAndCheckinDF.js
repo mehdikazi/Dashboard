@@ -37,7 +37,8 @@ function createAndGetJoinedActiveUsersAndCheckinDF(cleanedQd, cleanedCid) {
         lost_weight: (Math.round((left.start_weight - right.checkin_weight) * 10) / 10),
         fast_or_eat_day: right.fast_or_eat_day,
         calories_burned: right.calories_burned,
-        notes: right.notes
+        notes: right.notes,
+        tdee: right.tdee
       }
     }
   );
