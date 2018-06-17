@@ -13,7 +13,8 @@ function cleanCheckInDF() {
       calories_eaten: row.calories_eaten,
       rating: row.rating,
       tdee: row.tdee,
-      goal_weight: row.goal
+      goal_weight: row.goal,
+      burned_calories: row.burned_calories
     }));
 
   const cleanedCid = removedColumnsDf

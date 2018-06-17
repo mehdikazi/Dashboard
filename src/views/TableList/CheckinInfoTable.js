@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { RegularCard, Table, ItemGrid, CustomInput,} from "../../components";
 import customInputStyle from "../../assets/jss/material-dashboard-react/customInputStyle";
+const roundTo = require('round-to');
 
 class CheckinInfoTable extends React.Component {
   constructor(props) {
@@ -42,11 +43,31 @@ class CheckinInfoTable extends React.Component {
   }
 
   render() {
-    const filteredTable = window.joined_active_users_with_checkin_table
+    const checkinInfoColumnOrder = window.joined_active_users_with_checkin_table
+      .select(row => ({
+        checkin_date: row.checkin_date,
+        rating: row.rating,
+        name: row.first_name,
+        day: row.day_of_checkin,
+        challenge_period: row.challenge_period,
+        schedule: row.schedule,
+        fast_or_eat: row.fast_or_eat_day,
+        checkin_weight: row.checkin_weight,
+        goal_weight: row.goal_weight,
+        weight_lost: row.lost_weight,
+        percent_of_goal: roundTo((row.lost_weight / (row.start_weight - row.goal_weight)) * 100, 1) + "%",
+        calories_eaten: row.calories_eaten,
+        calories_burned: row.calories_burned,
+        start_date: row.start_date,
+        email: row.email,
+        notes: row.notes,
+      }))
+      .orderBy(column => column.rating)
+    const filteredTable = checkinInfoColumnOrder
       .where(row => this.checkDate(this.state.startDate, row.checkin_date) && this.checkEmail(this.state.email, row.email));
 
-    const convertedCheckInDatesSeries = filteredTable.getSeries("checkin_date").select(value => value.format("dddd, MMMM Do YYYY"));
-    const convertedStartDatesSeries = filteredTable.getSeries("start_date").select(value => value.format("dddd, MMMM Do YYYY"));
+    const convertedCheckInDatesSeries = filteredTable.getSeries("checkin_date").select(value => value.format("dddd, MM/DD/YYYY"));
+    const convertedStartDatesSeries = filteredTable.getSeries("start_date").select(value => value.format("dddd, MM/DD/YYYY"));
     var newDf = filteredTable.withSeries('checkin_date', convertedCheckInDatesSeries)
     newDf = newDf.withSeries('start_date', convertedStartDatesSeries)
     return(

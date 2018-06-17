@@ -120,6 +120,8 @@ function transformChallengePeriodToText(value) {
     return "90 Days";
   } else if (value == 91) {
     return "90 Days + 1:1";
+  } else if (value) {
+    return value.toString() + 'Days';
   } else {
     return "Not recorded";
   }
