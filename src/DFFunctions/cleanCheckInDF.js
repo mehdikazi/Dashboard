@@ -26,8 +26,6 @@ function cleanCheckInDF() {
       goal_weight: value => transformNumber(value)
     });
 
-  console.log(cleanedCid.toString());
-
   return cleanedCid;
 }
 
@@ -43,7 +41,6 @@ function transformDate(value) {
   if (!value) {
     return moment("1997-10-06");
   } else {
-    console.log(value);
     return moment(value);
   }
 }

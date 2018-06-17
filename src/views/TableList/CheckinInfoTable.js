@@ -45,8 +45,8 @@ class CheckinInfoTable extends React.Component {
     const filteredTable = window.joined_active_users_with_checkin_table
       .where(row => this.checkDate(this.state.startDate, row.checkin_date) && this.checkEmail(this.state.email, row.email));
 
-    const convertedCheckInDatesSeries = filteredTable.getSeries("checkin_date").select(value => value.format("dddd, MMMM Do YYYY"))
-    const convertedStartDatesSeries = filteredTable.getSeries("start_date").select(value => value.format("dddd, MMMM Do YYYY"))
+    const convertedCheckInDatesSeries = filteredTable.getSeries("checkin_date").select(value => value.format("dddd, MMMM Do YYYY"));
+    const convertedStartDatesSeries = filteredTable.getSeries("start_date").select(value => value.format("dddd, MMMM Do YYYY"));
     var newDf = filteredTable.withSeries('checkin_date', convertedCheckInDatesSeries)
     newDf = newDf.withSeries('start_date', convertedStartDatesSeries)
     return(

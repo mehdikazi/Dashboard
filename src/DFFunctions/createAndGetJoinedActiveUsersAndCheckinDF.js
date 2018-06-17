@@ -34,6 +34,7 @@ function createAndGetJoinedActiveUsersAndCheckinDF(cleanedQd, cleanedCid) {
         day_of_challenge: left.day_number,
         start_date: left.start_date,
         start_weight: left.start_weight,
+        lost_weight: (Math.round((left.start_weight - right.checkin_weight) * 10) / 10),
       }
     }
   );

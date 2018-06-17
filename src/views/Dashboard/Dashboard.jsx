@@ -43,44 +43,11 @@ class Dashboard extends React.Component {
         <Grid container>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={TrendingDown}
-              iconColor="purple"
-              title="Total Weight Lost"
-              description={Math.round(this.calculateTotalWeightLoss() * 10) / 10}
-              small="pounds"
-              statIcon={DateRange}
-              statText="Last 24 Hours"
-            />
-          </ItemGrid>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
               icon={Group}
               iconColor="orange"
               title="Total Users"
               description={window.qd.count()}
               small="users"
-              statIcon={DateRange}
-              statText="Last 24 Hours"
-            />
-          </ItemGrid>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
-              icon={Accessibility}
-              iconColor="green"
-              title="Active Users"
-              description={window.demographics_table.getSeries("number_active_users").toArray()[0]}
-              small="users"
-              statIcon={DateRange}
-              statText="Last 24 Hours"
-            />
-          </ItemGrid>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
-              icon={GroupAdd}
-              iconColor="red"
-              title="New to IF"
-              description={window.demographics_table.getSeries("Percent_New_To_IF").toArray()[0]}
-              small="%"
               statIcon={DateRange}
               statText="Last 24 Hours"
             />
@@ -99,11 +66,22 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={TrendingDown}
-              iconColor="purple"
-              title="Median Expected Loss"
-              description={window.demographics_table.getSeries("Median_Expected_Loss").toArray()[0]}
-              small="pounds"
+              icon={Accessibility}
+              iconColor="orange"
+              title="Active Users"
+              description={window.demographics_table.getSeries("number_active_users").toArray()[0]}
+              small="users"
+              statIcon={DateRange}
+              statText="Last 24 Hours"
+            />
+          </ItemGrid>
+          <ItemGrid xs={12} sm={6} md={3}>
+            <StatsCard
+              icon={Accessibility}
+              iconColor="red"
+              title="# of Females"
+              description={window.gender_table.toArray()[0].count}
+              small="users"
               statIcon={DateRange}
               statText="Last 24 Hours"
             />
@@ -111,7 +89,7 @@ class Dashboard extends React.Component {
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
               icon={DateRange}
-              iconColor="orange"
+              iconColor="red"
               title="Average Age"
               description={window.demographics_table.getSeries("Average_Age").toArray()[0]}
               small="years old"
@@ -121,11 +99,22 @@ class Dashboard extends React.Component {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Accessibility}
-              iconColor="green"
-              title="# of Females"
-              description={window.gender_table.toArray()[0].count}
-              small="users"
+              icon={GroupAdd}
+              iconColor="purple"
+              title="New to IF"
+              description={window.demographics_table.getSeries("Percent_New_To_IF").toArray()[0]}
+              small="%"
+              statIcon={DateRange}
+              statText="Last 24 Hours"
+            />
+          </ItemGrid>
+          <ItemGrid xs={12} sm={6} md={3}>
+            <StatsCard
+              icon={TrendingDown}
+              iconColor="blue"
+              title="Total Weight Lost"
+              description={Math.round(this.calculateTotalWeightLoss() * 10) / 10}
+              small="pounds"
               statIcon={DateRange}
               statText="Last 24 Hours"
             />
@@ -154,7 +143,7 @@ class Dashboard extends React.Component {
                   listener={schedule_data.animation}
                 />
               }
-              chartColor="green"
+              chartColor="blue"
               title="Schedule Breakdown"
               text={'Total users broken down by schedule'}
               statIcon={AccessTime}
@@ -192,7 +181,6 @@ class Dashboard extends React.Component {
       durations2 = 500;
 
     const schedule_data_array = window.schedule_table.toRows();
-    // console.log(schedule_data_array);
     const labels = []
     const series = []
     for (var i=0; i < schedule_data_array.length; i++) {
