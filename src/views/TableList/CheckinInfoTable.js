@@ -61,7 +61,7 @@ class CheckinInfoTable extends React.Component {
         calories_burned: row.calories_burned,
         start_date: row.start_date,
         email: row.email,
-        notes: row.notes,
+        daily_notes_for_day_of_checkin: row.notes,
       }))
       .orderBy(column => column.rating)
     const filteredTable = checkinInfoColumnOrder
