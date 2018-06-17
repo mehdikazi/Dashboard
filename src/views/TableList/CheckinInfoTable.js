@@ -5,8 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { RegularCard, Table, ItemGrid, CustomInput,} from "../../components";
 import customInputStyle from "../../assets/jss/material-dashboard-react/customInputStyle";
-// const roundTo = require('round-to');
-// roundTo((row.lost_weight / (row.start_weight - row.goal_weight)) * 100, 1) + "%",
+import * as math from 'mathjs';
 
 class CheckinInfoTable extends React.Component {
   constructor(props) {
@@ -56,7 +55,7 @@ class CheckinInfoTable extends React.Component {
         checkin_weight: row.checkin_weight,
         goal_weight: row.goal_weight,
         weight_lost: row.lost_weight,
-        percent_of_goal: ((Math.round(row.lost_weight / (row.start_weight - row.goal_weight)) * 100) / 100) * 100,
+        percent_of_goal: math.round((row.lost_weight / (row.start_weight - row.goal_weight)) * 100, 1) + "%",
         calories_eaten: row.calories_eaten,
         calories_burned: row.calories_burned,
         start_date: row.start_date,
